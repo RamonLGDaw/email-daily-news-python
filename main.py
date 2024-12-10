@@ -1,16 +1,20 @@
 import requests
+from send_email import sending_email
+import os
 
-API_KEY = '57a06ffc360b459ba2139a3fedc98704'
+
+API_KEY = str(os.getenv('API_KEY'))
 url = f'https://newsapi.org/v2/everything?q=tesla&sortBy=publishedAt&apiKey={API_KEY}'
-#https://newsapi.org/v2/everything?q=tesla&sortBy=publishedAt&apiKey=57a06ffc360b459ba2139a3fedc98704
+
 
 #? Make request
 request = requests.get(url)
 
 #? Get a dictionary with data
 content = request.json()
-
+text = ''
 #? Access the article titles and description
 for article in content['articles']:
-    print(f"Title ==> {article['title']}")
-    print(f"Description ==> {article['description']}")
+    text = text + str(article["title"]) + '\n' + str(article["description"]) + 2*'\n'
+
+sending_email(message=text)
